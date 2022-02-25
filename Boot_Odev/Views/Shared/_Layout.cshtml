@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" dir="ltr">
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="BootCamp" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="Sefa Yilmaz" />
+    <meta name="MobileOptimized" content="320" />
+
+    <title>@ViewBag.Title - Northwind</title>
+
+    @*<link rel="stylesheet" href="~/css/style.css" />*@
+
+    @await RenderSectionAsync("Styles", required: false)
+
+</head>
+<body>
+
+    <partial name="Partials/_HeaderPartial" />
+    @RenderBody()
+    <partial name="Partials/_FooterPartial" />
+    <!--===== script start =====-->
+    <script src="~/js/js.js"></script>
+    <script src="~/js/jquery.min.js"></script>
+
+
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body> 
+</html>

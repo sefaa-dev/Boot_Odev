@@ -1,0 +1,11 @@
+﻿@model LoginViewModel
+
+<div class="login-page">
+    <div class="form">
+        <form class="login-form" asp-controller="Home" asp-action="Login">
+            <input type="text" asp-for="@Model.userName" placeholder="username" />
+            <input type="password" asp-for="@Model.password" placeholder="password" />
+            <button>login</button>
+        </form>
+    </div>
+</div>
