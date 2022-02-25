@@ -12,7 +12,7 @@ namespace Boot_Odev.Models
             CustomerCustomerDemos = new HashSet<CustomerCustomerDemo>();
         }
 
-        public string CustomerType { get; set; }
+        public string CustomerTypeId { get; set; }
         public string CustomerDesc { get; set; }
 
         public virtual ICollection<CustomerCustomerDemo> CustomerCustomerDemos { get; set; }

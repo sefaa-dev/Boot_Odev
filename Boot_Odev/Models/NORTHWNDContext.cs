@@ -46,19 +46,18 @@ namespace Boot_Odev.Models
         public virtual DbSet<SummaryOfSalesByYear> SummaryOfSalesByYears { get; set; }
         public virtual DbSet<Supplier> Suppliers { get; set; }
         public virtual DbSet<Territory> Territories { get; set; }
-        public virtual DbSet<VwProductsWithCategory> VwProductsWithCategories { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Data Source=DESKTOP-8M7D7GE;Initial Catalog=NORTHWND;User ID=sa;Password=1234;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+                optionsBuilder.UseSqlServer("Server=.;Database=NORTHWND;Trusted_Connection=True");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("Relational:Collation", "Turkish_CI_AS");
+            modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
             modelBuilder.Entity<AlphabeticalListOfProduct>(entity =>
             {
@@ -218,11 +217,12 @@ namespace Boot_Odev.Models
 
             modelBuilder.Entity<CustomerDemographic>(entity =>
             {
-                entity.HasKey(e => e.CustomerType)
+                entity.HasKey(e => e.CustomerTypeId)
                     .IsClustered(false);
 
-                entity.Property(e => e.CustomerType)
+                entity.Property(e => e.CustomerTypeId)
                     .HasMaxLength(10)
+                    .HasColumnName("CustomerTypeID")
                     .IsFixedLength(true);
 
                 entity.Property(e => e.CustomerDesc).HasColumnType("ntext");
@@ -397,7 +397,7 @@ namespace Boot_Odev.Models
 
                 entity.Property(e => e.Freight)
                     .HasColumnType("money")
-                    .HasDefaultValueSql("((0))");
+                    .HasDefaultValueSql("(0)");
 
                 entity.Property(e => e.OrderDate).HasColumnType("datetime");
 
@@ -452,7 +452,7 @@ namespace Boot_Odev.Models
 
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
 
-                entity.Property(e => e.Quantity).HasDefaultValueSql("((1))");
+                entity.Property(e => e.Quantity).HasDefaultValueSql("(1)");
 
                 entity.Property(e => e.UnitPrice).HasColumnType("money");
 
@@ -571,17 +571,17 @@ namespace Boot_Odev.Models
 
                 entity.Property(e => e.QuantityPerUnit).HasMaxLength(20);
 
-                entity.Property(e => e.ReorderLevel).HasDefaultValueSql("((0))");
+                entity.Property(e => e.ReorderLevel).HasDefaultValueSql("(0)");
 
                 entity.Property(e => e.SupplierId).HasColumnName("SupplierID");
 
                 entity.Property(e => e.UnitPrice)
                     .HasColumnType("money")
-                    .HasDefaultValueSql("((0))");
+                    .HasDefaultValueSql("(0)");
 
-                entity.Property(e => e.UnitsInStock).HasDefaultValueSql("((0))");
+                entity.Property(e => e.UnitsInStock).HasDefaultValueSql("(0)");
 
-                entity.Property(e => e.UnitsOnOrder).HasDefaultValueSql("((0))");
+                entity.Property(e => e.UnitsOnOrder).HasDefaultValueSql("(0)");
 
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Products)
@@ -803,23 +803,6 @@ namespace Boot_Odev.Models
                     .HasForeignKey(d => d.RegionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Territories_Region");
-            });
-
-            modelBuilder.Entity<VwProductsWithCategory>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToView("vw_ProductsWithCategories");
-
-                entity.Property(e => e.CategoryName)
-                    .IsRequired()
-                    .HasMaxLength(15);
-
-                entity.Property(e => e.ProductName)
-                    .IsRequired()
-                    .HasMaxLength(40);
-
-                entity.Property(e => e.UnitPrice).HasColumnType("money");
             });
 
             OnModelCreatingPartial(modelBuilder);

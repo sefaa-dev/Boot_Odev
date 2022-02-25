@@ -1,4 +1,5 @@
 ﻿using Boot_Odev.Models;
+using Boot_Odev.Models;
 using Boot_Odev.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -6,12 +7,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+
+
+
 namespace Boot_Odev.Controllers
 {
     public class HomeController : Controller
     {
         NORTHWNDContext context = new NORTHWNDContext();
-        
+
         public IActionResult Login()
         {
             return View();
@@ -33,7 +37,7 @@ namespace Boot_Odev.Controllers
                 });
             }
             var user = loginViewModels.FirstOrDefault(x => x.userName == login.userName.ToLower() && x.password == login.password.ToLower());
-            
+
             // kişi eşleşmesi kontrol edildi
             if (user == null)
             {
@@ -44,8 +48,33 @@ namespace Boot_Odev.Controllers
 
         public IActionResult GetOrder(int Id)
         {
-       
-            return View();
+            var query = (from e in context.Employees
+                         join o in context.Orders on e.EmployeeId equals o.EmployeeId
+                         join od in context.OrderDetails on o.OrderId equals od.OrderId
+                         join c in context.Customers on o.CustomerId equals c.CustomerId
+                         where e.EmployeeId == Id                      
+                         select new
+                         { c.CompanyName, o.OrderDate, o.OrderId, price = od.Quantity * (float)od.UnitPrice * (1 - od.Discount) }).ToList();
+
+        
+
+
+            List<TableViewModel> tableViewModels = new List<TableViewModel>();
+
+            foreach (var item in query)
+            {
+                tableViewModels.Add(new TableViewModel
+                {
+                    CompanyName = item.CompanyName,
+                    OrderDate = $"{DateTime.Parse(item.OrderDate.ToString()).Day}/{DateTime.Parse(item.OrderDate.ToString()).Month}/{DateTime.Parse(item.OrderDate.ToString()).Year}",
+                    OrderId = item.OrderId,
+                    Price = item.price
+                });
+            }
+
+            return View(tableViewModels);
         }
+
     }
+
 }

@@ -1,0 +1,30 @@
+﻿@model List<TableViewModel>
+
+<Style>
+    .th{
+
+    }
+
+</Style>
+
+<table>
+    <tr>
+        <th>#</th>
+        <th>Müşteri Adı</th>
+        <th>Sipariş Tarihi</th>
+        <th>Sipariş No</th>
+        <th>Sipariş Tutarı</th>
+    </tr>
+
+    @for (int i = 1; i <= Model.Count(); i++)
+    {
+<tr>
+    <td>@i</td>
+    <td>@Model[i - 1].CompanyName</td>
+    <td>@Model[i - 1].OrderDate</td>
+    <td>@Model[i - 1].OrderId</td>
+    <td>@Model[i - 1].Price</td>
+</tr>
+    }
+
+</table>
